@@ -6,10 +6,14 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
+  LogOut,
+  Settings,
 } from 'lucide-react';
 
 import { format, getDate } from 'date-fns';
 import useCalendar from '@/store/CalendarContext';
+import { useAuth } from '@/store/AuthContext';
+import { useState, useRef, useEffect } from 'react';
 
 import {
   Select,
@@ -28,33 +32,56 @@ import {
 
 export default function Navbar() {
   const {
-  currentDate,
-  nextPeriod,
-  prevPeriod,
-  goToToday,
-  currentView,
-  setCurrentView,
-  toggleSidebar,
-} = useCalendar();
+    currentDate,
+    nextPeriod,
+    prevPeriod,
+    goToToday,
+    currentView,
+    setCurrentView,
+    toggleSidebar,
+  } = useCalendar();
+  const { user, logout, isAuthenticated } = useAuth();
+
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const todayDayNumber = getDate(new Date());
+
+  // Close user menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Dynamic heading
   const getHeaderText = () => {
     switch (currentView) {
       case 'day':
         return format(currentDate, 'dd MMMM yyyy');
-
       case 'week':
       case 'month':
         return format(currentDate, 'MMMM yyyy');
-
       case 'year':
         return format(currentDate, 'yyyy');
-
       default:
         return format(currentDate, 'MMMM yyyy');
     }
+  };
+
+  // Get initials for avatar fallback
+  const getInitials = () => {
+    if (!user?.name) return 'U';
+    return user.name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -150,11 +177,44 @@ export default function Navbar() {
           </SelectContent>
         </Select>
 
-        {/* Avatar */}
-        <Avatar className="h-8 w-8">
-          <AvatarImage src="/user-img.jpg" alt="User avatar" />
-          <AvatarFallback>TT</AvatarFallback>
-        </Avatar>
+        {/* User Avatar with Dropdown */}
+        {isAuthenticated && (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setShowUserMenu((prev) => !prev)}
+              className="rounded-full transition-all hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700"
+            >
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="" alt={user?.name || 'User'} />
+                <AvatarFallback className="bg-blue-600 text-white text-xs font-semibold">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+
+            {/* Dropdown Menu */}
+            {showUserMenu && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800">
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                    {user?.name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    logout();
+                  }}
+                  className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

@@ -11,55 +11,38 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/store/AuthContext';
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-
-  const router = useRouter();
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); 
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
-      return; 
+      return;
     }
 
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-       
-        router.push('/login'); 
-      } else {
-        setError(data.message || 'Registration failed. Please try again.');
-      }
-    } catch (error) {
-      setError('An unexpected server error occurred.');
+    setIsLoading(true);
+    const result = await register(name, email, password);
+    if (!result.success) {
+      setError(result.error || 'Registration failed');
     }
+    setIsLoading(false);
   };
 
   return (
-    
     <form onSubmit={handleRegister} className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
@@ -69,7 +52,6 @@ export function SignupForm({
           </p>
         </div>
 
-        
         {error && (
           <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md text-center border border-red-200">
             {error}
@@ -84,8 +66,8 @@ export function SignupForm({
             placeholder="John Doe"
             required
             className="bg-background"
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </Field>
         <Field>
@@ -96,8 +78,8 @@ export function SignupForm({
             placeholder="m@example.com"
             required
             className="bg-background"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Field>
         <Field>
@@ -108,7 +90,7 @@ export function SignupForm({
             required
             className="bg-background"
             value={password}
-            onChange={(e) => setPassword(e.target.value)} 
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FieldDescription>
             Must be at least 6 characters long.
@@ -121,15 +103,17 @@ export function SignupForm({
             type="password"
             required
             className="bg-background"
-            value={confirmPassword} // <-- Bound state
-            onChange={(e) => setConfirmPassword(e.target.value)} 
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button type="submit">Create Account</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Create Account'}
+          </Button>
         </Field>
-        
+
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
           <Button variant="outline" type="button">

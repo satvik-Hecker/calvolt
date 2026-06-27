@@ -12,50 +12,31 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useAuth } from "@/store/AuthContext"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-
-  // --- Added State and API Logic ---
-  const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        
-        localStorage.setItem('token', data.token);
-        
-        router.push('/'); 
-      } else {
-        setError(data.message || 'Invalid email or password');
-      }
-    } catch (err) {
-      setError('An unexpected server error occurred.');
+    const result = await login(email, password);
+    if (!result.success) {
+      setError(result.error || 'Login failed');
     }
+    setIsLoading(false);
   };
-  
 
   return (
-   
     <form onSubmit={handleLogin} className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
@@ -65,7 +46,6 @@ export function LoginForm({
           </p>
         </div>
 
-       
         {error && (
           <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md text-center border border-red-200">
             {error}
@@ -99,12 +79,14 @@ export function LoginForm({
             type="password"
             required
             className="bg-background"
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Signing in...' : 'Login'}
+          </Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
@@ -119,7 +101,6 @@ export function LoginForm({
           </Button>
           <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
-           
             <Link href="/signup" className="underline underline-offset-4 text-blue-600">
               Sign up
             </Link>

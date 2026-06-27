@@ -15,10 +15,79 @@
   }
   * {
     @apply border-border outline-ring/50;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
   html {
     @apply font-mono;
   }
+}
+
+/* Scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-in {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.slide-in-from-bottom-4 {
+  animation-name: slideUp;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideDown;
+}
+
+.zoom-in-95 {
+  animation-name: scaleIn;
+}
+
+/* Event chip transitions */
+.event-chip {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.event-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Drag ghost styling */
+.dragging {
+  opacity: 0.7;
+  cursor: grabbing !important;
 }
 
 @theme inline {
