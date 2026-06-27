@@ -142,21 +142,22 @@ export default function MonthView() {
   });
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      {/* Week day headers */}
-      <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
-        {weekDays.map((day) => (
-          <div
-            key={day}
-            className="text-center text-[11px] font-semibold text-gray-500 dark:text-gray-400 py-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-x-auto no-scrollbar">
+      <div className="min-w-[700px] flex flex-col h-full flex-1">
+        {/* Week day headers */}
+        <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          {weekDays.map((day) => (
+            <div
+              key={day}
+              className="text-center text-[11px] font-semibold text-gray-500 dark:text-gray-400 py-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
+            >
+              {day}
+            </div>
+          ))}
+        </div>
 
-      {/* Calendar grid */}
-      <div className="grid grid-cols-7 flex-1 auto-rows-fr">
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 flex-1 auto-rows-fr">
         {calendarDays.map((day) => {
           const isCurrentMonth = isSameMonth(day, monthStart);
           const isCurrentDay = isToday(day);
@@ -225,6 +226,7 @@ export default function MonthView() {
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );

@@ -28,6 +28,7 @@ export default function Sidebar() {
     setEditingEvent,
     setSelectedHour,
     isSidebarOpen,
+    setIsSidebarOpen,
     events,
   } = useCalendar();
 
@@ -56,12 +57,21 @@ export default function Sidebar() {
   };
 
   return (
-    <aside
-      className={cn(
-        'hidden md:block border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 ease-in-out',
-        isSidebarOpen ? 'w-64 p-4' : 'w-0 p-0 border-r-0'
+    <>
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
       )}
-    >
+
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 md:relative md:z-auto md:block border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 ease-in-out',
+          isSidebarOpen ? 'w-64 p-4' : 'w-0 p-0 border-r-0'
+        )}
+      >
       {isSidebarOpen && (
         <div className="h-[calc(100vh-65px)] overflow-y-auto no-scrollbar">
           {/* Create Button */}
@@ -188,5 +198,6 @@ export default function Sidebar() {
         </div>
       )}
     </aside>
+    </>
   );
 }

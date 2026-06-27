@@ -236,7 +236,7 @@ export default function EventModal() {
       onClick={handleClose}
     >
       <div
-        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700 overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-[95%] sm:w-full sm:max-w-md max-h-[90vh] flex flex-col border border-gray-200 dark:border-gray-700 overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -318,7 +318,7 @@ export default function EventModal() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-5 space-y-4 overflow-y-auto overflow-x-hidden flex-1 no-scrollbar">
           {error && (
             <div className="text-red-500 text-sm p-2.5 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
               {error}

@@ -113,7 +113,7 @@ export default function EventDetailPopover() {
       <div
         ref={popoverRef}
         onClick={(e) => e.stopPropagation()}
-        className="fixed z-50 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-72 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="fixed z-50 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-72 max-w-[90vw] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         style={{
           top: adjustedPos?.top ?? detailPosition.y,
           left: adjustedPos?.left ?? detailPosition.x,

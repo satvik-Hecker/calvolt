@@ -218,13 +218,14 @@ export default function WeekView() {
 
   return (
     <div
-      className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden"
+      className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-x-auto no-scrollbar"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={() => dragState && handleMouseUp()}
     >
-      {/* Header Row */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 z-10 flex-shrink-0">
+      <div className="min-w-[700px] flex flex-col h-full flex-1">
+        {/* Header Row */}
+        <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 z-10 flex-shrink-0">
         <div className="w-16 flex-shrink-0" />
         {weekDays.map((day) => (
           <div
@@ -390,6 +391,8 @@ export default function WeekView() {
               </div>
             );
           })}
+        </div>
+      </div>
         </div>
       </div>
     </div>
