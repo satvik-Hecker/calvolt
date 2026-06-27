@@ -4,7 +4,7 @@ const eventSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'Please add a title for the event'],
+      required: [true, 'Event title is required'],
       trim: true,
       maxLength: [200, 'Title cannot exceed 200 characters'],
     },
@@ -16,16 +16,37 @@ const eventSchema = new mongoose.Schema(
     },
     startTime: {
       type: Date,
-      required: [true, 'Please add a start time'],
+      required: [true, 'Event start time is required'],
     },
     endTime: {
       type: Date,
-      required: [true, 'Please add an end time'],
+      required: [true, 'Event end time is required'],
     },
+    color: { 
+    type: String, 
+    default: 'bg-blue-600' 
+    },
+    reminders: [{ 
+    type: Number // Array of minutes before the event 
+    }],
     isAllDay: {
       type: Boolean,
       default: false,
     },
+    repeat: {
+    frequency: { 
+      type: String, 
+      enum: ['none', 'daily', 'weekly', 'monthly', 'yearly'], 
+      default: 'none' 
+    },
+    interval: { 
+      type: Number, 
+      default: 1 
+    },
+    endDate: { 
+      type: Date 
+    }
+  }
   },
   {
     timestamps: true, 
@@ -33,12 +54,20 @@ const eventSchema = new mongoose.Schema(
 );
 
 // Pre-save middleware to prevent logical time errors
-eventSchema.pre('save', function (next) {
-  // Edge Case: Ensure end time is strictly after start time
-  if (this.startTime >= this.endTime) {
-    return next(new Error('End time must be strictly after start time.'));
+eventSchema.pre('save', async function () {
+  // Ensure end time is strictly after start time
+  if (this.endTime <= this.startTime) {
+    throw new Error('End time must be after start time.');
   }
   
+  // Ensure recurring end date is after the event start time
+  if (this.repeat.frequency !== 'none' && this.repeat.endDate) {
+    if (this.repeat.endDate <= this.startTime) {
+      throw new Error('Recurring end date must be after the event start time.');
+    }
+  }
+  
+  return;
 });
 
 const Event = mongoose.model('Event', eventSchema);

@@ -1,5 +1,4 @@
-'use client'; // <-- Add this since we are using hooks now
-
+'use client'; 
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import MonthView from '@/components/calendar/MonthView';
@@ -7,10 +6,10 @@ import DayView from '@/components/calendar/DayView';
 import WeekView from '@/components/calendar/WeekView';
 import YearView from '@/components/calendar/YearView';
 
-import { useCalendar } from '@/store/CalendarContext'; // <-- Import the hook
+import { useCalendar } from '@/store/CalendarContext'; 
 
 export default function Home() {
-  const { currentView } = useCalendar(); // <-- Pull the current view state
+  const { currentView } = useCalendar(); 
 
   return (
     <div className="h-screen w-screen flex flex-col bg-white dark:bg-gray-900 overflow-hidden">
