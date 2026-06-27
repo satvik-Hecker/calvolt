@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/db.js";
 import eventRoutes from "./src/routes/eventRoutes.js"; 
+import authRoutes from "./src/routes/authRoutes.js";
 import dns from "node:dns/promises"; 
 
 dotenv.config();
@@ -21,7 +22,7 @@ app.get('/api/health', (req, res) => {
 
 
 app.use('/api/events', eventRoutes);
-
+app.use('/api/auth', authRoutes);
 const startServer = async () => {
   const PORT = process.env.PORT || 5000;
   
