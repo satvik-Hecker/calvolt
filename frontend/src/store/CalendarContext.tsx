@@ -3,21 +3,18 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { addMonths, subMonths } from 'date-fns';
 
-// Create the context
 const CalendarContext = createContext<any>(null);
 
-// Create the provider component
 export const CalendarProvider = ({ children }: { children: ReactNode }) => {
-  // 1. Track the date the user is currently viewing
   const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // 2. Track the current calendar view ('month', 'week', 'day', 'year')
   const [currentView, setCurrentView] = useState('month'); 
-  
-  // 3. Track the list of events loaded from the backend
   const [events, setEvents] = useState([]);
+  
+  // --- NEW STATE FOR THE MODAL ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  // -------------------------------
 
-  // Navigation helpers using date-fns
   const nextMonth = () => setCurrentDate((prev) => addMonths(prev, 1));
   const prevMonth = () => setCurrentDate((prev) => subMonths(prev, 1));
   const goToToday = () => setCurrentDate(new Date());
@@ -25,20 +22,14 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   return (
     <CalendarContext.Provider 
       value={{ 
-        // Date state & functions
-        currentDate, 
-        setCurrentDate,
-        nextMonth, 
-        prevMonth, 
-        goToToday,
+        currentDate, setCurrentDate, nextMonth, prevMonth, goToToday,
+        currentView, setCurrentView, 
+        events, setEvents,
         
-        // View state
-        currentView, 
-        setCurrentView, 
-        
-        // Event state
-        events, 
-        setEvents 
+        // --- ADD NEW STATE TO PROVIDER VALUE ---
+        isModalOpen, setIsModalOpen,
+        selectedDate, setSelectedDate
+        // ---------------------------------------
       }}
     >
       {children}
@@ -46,13 +37,11 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook to easily use this context in any component
-const useCalendar = () => {
+export const useCalendar = () => {
   const context = useContext(CalendarContext);
   if (!context) {
     throw new Error('useCalendar must be used within a CalendarProvider');
   }
   return context;
 };
-
 export default useCalendar;

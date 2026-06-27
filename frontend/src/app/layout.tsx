@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { CalendarProvider } from "@/store/CalendarContext";
+import EventModal from "@/components/EventModal";
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
@@ -32,7 +33,10 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <CalendarProvider>{children}</CalendarProvider>
+        <CalendarProvider>
+          {children}
+          <EventModal />
+        </CalendarProvider>
       </body>
     </html>
   );
