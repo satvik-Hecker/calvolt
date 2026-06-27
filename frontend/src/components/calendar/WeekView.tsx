@@ -141,10 +141,10 @@ export default function WeekView() {
         setDragState((prev) =>
           prev
             ? {
-                ...prev,
-                currentTop: (newMinutes / 60) * HOUR_HEIGHT,
-                currentCol: newCol,
-              }
+              ...prev,
+              currentTop: (newMinutes / 60) * HOUR_HEIGHT,
+              currentCol: newCol,
+            }
             : null
         );
       } else {
@@ -158,9 +158,9 @@ export default function WeekView() {
         setDragState((prev) =>
           prev
             ? {
-                ...prev,
-                currentHeight: (newDuration / 60) * HOUR_HEIGHT,
-              }
+              ...prev,
+              currentHeight: (newDuration / 60) * HOUR_HEIGHT,
+            }
             : null
         );
       }
@@ -226,175 +226,175 @@ export default function WeekView() {
       <div className="min-w-[700px] flex flex-col h-full flex-1">
         {/* Header Row */}
         <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 z-10 flex-shrink-0">
-        <div className="w-16 flex-shrink-0" />
-        {weekDays.map((day) => (
-          <div
-            key={day.toString()}
-            className="flex-1 flex flex-col items-center py-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
-          >
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-              {format(day, 'EEE').toUpperCase()}
-            </span>
-            <span
-              className={cn(
-                'text-xl font-medium w-10 h-10 flex items-center justify-center rounded-full mt-1 transition-colors',
-                isToday(day)
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 dark:text-gray-200'
-              )}
-            >
-              {format(day, 'd')}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* All-day events row */}
-      {allDayEvents.length > 0 && (
-        <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
-          <div className="w-16 flex-shrink-0 text-right pr-2 py-1 text-[10px] text-gray-400">
-            all-day
-          </div>
-          <div className="flex-1 grid grid-cols-7 gap-0.5 py-1 px-0.5">
-            {weekDays.map((day) => {
-              const dayAllDay = allDayEvents.filter((e) =>
-                isSameDay(new Date(e.startTime), day)
-              );
-              return (
-                <div key={day.toString()} className="flex flex-col gap-0.5">
-                  {dayAllDay.map((event) => (
-                    <div
-                      key={event._id}
-                      onClick={(e) => handleEventClick(e, event)}
-                      className="text-[10px] text-white px-1.5 py-0.5 rounded truncate cursor-pointer hover:opacity-90 transition-opacity"
-                      style={{ backgroundColor: event.color || '#4285f4' }}
-                    >
-                      {event.title}
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Time Grid */}
-      <div className="flex flex-1 overflow-y-auto" ref={gridRef}>
-        {/* Time Labels Column */}
-        <div className="w-16 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-700">
-          {hours.map((hour) => (
+          <div className="w-16 flex-shrink-0" />
+          {weekDays.map((day) => (
             <div
-              key={`label-${hour}`}
-              className="text-right pr-2 text-xs text-gray-400 dark:text-gray-500 flex-shrink-0"
-              style={{ height: HOUR_HEIGHT }}
+              key={day.toString()}
+              className="flex-1 flex flex-col items-center py-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
             >
-              <span className="relative -top-2">
-                {hour === 0 ? '' : format(new Date().setHours(hour, 0), 'h a')}
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                {format(day, 'EEE').toUpperCase()}
+              </span>
+              <span
+                className={cn(
+                  'text-xl font-medium w-10 h-10 flex items-center justify-center rounded-full mt-1 transition-colors',
+                  isToday(day)
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 dark:text-gray-200'
+                )}
+              >
+                {format(day, 'd')}
               </span>
             </div>
           ))}
         </div>
 
-        {/* 7-Day Columns */}
-        <div className="flex-1 grid grid-cols-7 relative">
-          {weekDays.map((day, colIndex) => {
-            const dayEvents = getTimedEventsForDay(day);
-            const isTodayCol = isToday(day);
-
-            return (
-              <div
-                key={`col-${day}`}
-                className="border-r border-gray-200 dark:border-gray-700 last:border-r-0 relative"
-              >
-                {/* Hour slots */}
-                {hours.map((hour) => (
-                  <div
-                    key={`${day}-${hour}`}
-                    className="border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                    style={{ height: HOUR_HEIGHT }}
-                    onClick={() => handleCellClick(day, hour)}
-                  />
-                ))}
-
-                {/* Current time indicator */}
-                {isTodayCol && (
-                  <div
-                    className="absolute left-0 right-0 z-20 pointer-events-none"
-                    style={{ top: (currentMinutes / 60) * HOUR_HEIGHT }}
-                  >
-                    <div className="flex items-center">
-                      <div className="w-2.5 h-2.5 bg-red-500 rounded-full -ml-1" />
-                      <div className="flex-1 h-0.5 bg-red-500" />
-                    </div>
-                  </div>
-                )}
-
-                {/* Events */}
-                {dayEvents.map((event) => {
-                  const pos = getEventPosition(event);
-                  const isDragging = dragState?.eventId === event._id;
-
-                  const displayTop =
-                    isDragging && dragState?.type === 'move'
-                      ? dragState.currentTop
-                      : pos.top;
-                  const displayHeight =
-                    isDragging && dragState?.type === 'resize'
-                      ? dragState.currentHeight
-                      : pos.height;
-
-                  return (
-                    <div
-                      key={event._id}
-                      className={cn(
-                        'absolute left-0.5 right-1 rounded-md px-1.5 py-0.5 cursor-pointer overflow-hidden group z-10 transition-shadow border-l-4',
-                        isDragging ? 'opacity-80 shadow-lg z-30' : 'hover:shadow-md'
-                      )}
-                      style={{
-                        top: displayTop,
-                        height: Math.max(displayHeight, 20),
-                        backgroundColor: `${event.color || '#4285f4'}20`,
-                        borderLeftColor: event.color || '#4285f4',
-                      }}
-                      onClick={(e) => handleEventClick(e, event)}
-                      onMouseDown={(e) => handleMouseDown(e, event, 'move', colIndex)}
-                    >
+        {/* All-day events row */}
+        {allDayEvents.length > 0 && (
+          <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
+            <div className="w-16 flex-shrink-0 text-right pr-2 py-1 text-[10px] text-gray-400">
+              all-day
+            </div>
+            <div className="flex-1 grid grid-cols-7 gap-0.5 py-1 px-0.5">
+              {weekDays.map((day) => {
+                const dayAllDay = allDayEvents.filter((e) =>
+                  isSameDay(new Date(e.startTime), day)
+                );
+                return (
+                  <div key={day.toString()} className="flex flex-col gap-0.5">
+                    {dayAllDay.map((event) => (
                       <div
-                        className="text-xs font-medium truncate"
-                        style={{ color: event.color || '#4285f4' }}
+                        key={event._id}
+                        onClick={(e) => handleEventClick(e, event)}
+                        className="text-[10px] text-white px-1.5 py-0.5 rounded truncate cursor-pointer hover:opacity-90 transition-opacity"
+                        style={{ backgroundColor: event.color || '#4285f4' }}
                       >
                         {event.title}
                       </div>
-                      {displayHeight > 30 && (
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400">
-                          {format(new Date(event.startTime), 'h:mm a')} -{' '}
-                          {format(new Date(event.endTime), 'h:mm a')}
-                        </div>
-                      )}
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
-                      {/* Resize handle */}
-                      <div
-                        className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{
-                          backgroundColor: event.color || '#4285f4',
-                          borderRadius: '0 0 4px 4px',
-                        }}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          handleMouseDown(e, event, 'resize', colIndex);
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+        {/* Time Grid */}
+        <div className="flex flex-1 overflow-y-auto" ref={gridRef}>
+          {/* Time Labels Column */}
+          <div className="w-16 flex-shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-700">
+            {hours.map((hour) => (
+              <div
+                key={`label-${hour}`}
+                className="text-right pr-2 text-xs text-gray-400 dark:text-gray-500 flex-shrink-0"
+                style={{ height: HOUR_HEIGHT }}
+              >
+                <span className="relative -top-2">
+                  {hour === 0 ? '' : format(new Date().setHours(hour, 0), 'h a')}
+                </span>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            ))}
+          </div>
+
+          {/* 7-Day Columns */}
+          <div className="flex-1 grid grid-cols-7 relative">
+            {weekDays.map((day, colIndex) => {
+              const dayEvents = getTimedEventsForDay(day);
+              const isTodayCol = isToday(day);
+
+              return (
+                <div
+                  key={`col-${day}`}
+                  className="border-r border-gray-200 dark:border-gray-700 last:border-r-0 relative"
+                >
+                  {/* Hour slots */}
+                  {hours.map((hour) => (
+                    <div
+                      key={`${day}-${hour}`}
+                      className="border-b border-gray-100 dark:border-gray-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      style={{ height: HOUR_HEIGHT }}
+                      onClick={() => handleCellClick(day, hour)}
+                    />
+                  ))}
+
+                  {/* Current time indicator */}
+                  {isTodayCol && (
+                    <div
+                      className="absolute left-0 right-0 z-20 pointer-events-none"
+                      style={{ top: (currentMinutes / 60) * HOUR_HEIGHT }}
+                    >
+                      <div className="flex items-center">
+                        <div className="w-2.5 h-2.5 bg-red-500 rounded-full -ml-1" />
+                        <div className="flex-1 h-0.5 bg-red-500" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Events */}
+                  {dayEvents.map((event) => {
+                    const pos = getEventPosition(event);
+                    const isDragging = dragState?.eventId === event._id;
+
+                    const displayTop =
+                      isDragging && dragState?.type === 'move'
+                        ? dragState.currentTop
+                        : pos.top;
+                    const displayHeight =
+                      isDragging && dragState?.type === 'resize'
+                        ? dragState.currentHeight
+                        : pos.height;
+
+                    return (
+                      <div
+                        key={event._id}
+                        className={cn(
+                          'absolute left-0.5 right-1 rounded-md px-1.5 py-0.5 cursor-pointer overflow-hidden group z-10 transition-shadow border-l-4',
+                          isDragging ? 'opacity-80 shadow-lg z-30' : 'hover:shadow-md'
+                        )}
+                        style={{
+                          top: displayTop,
+                          height: Math.max(displayHeight, 20),
+                          backgroundColor: `${event.color || '#4285f4'}20`,
+                          borderLeftColor: event.color || '#4285f4',
+                        }}
+                        onClick={(e) => handleEventClick(e, event)}
+                        onMouseDown={(e) => handleMouseDown(e, event, 'move', colIndex)}
+                      >
+                        <div
+                          className="text-xs font-medium truncate"
+                          style={{ color: event.color || '#4285f4' }}
+                        >
+                          {event.title}
+                        </div>
+                        {displayHeight > 30 && (
+                          <div className="text-[10px] text-gray-500 dark:text-gray-400">
+                            {format(new Date(event.startTime), 'h:mm a')} -{' '}
+                            {format(new Date(event.endTime), 'h:mm a')}
+                          </div>
+                        )}
+
+                        {/* Resize handle */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{
+                            backgroundColor: event.color || '#4285f4',
+                            borderRadius: '0 0 4px 4px',
+                          }}
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            handleMouseDown(e, event, 'resize', colIndex);
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
+
   );
 }
