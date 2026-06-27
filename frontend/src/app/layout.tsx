@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CalVolt — Smart Calendar",
+  title: "CalVolt",
   description:
     "A high-fidelity Google Calendar clone with event creation, drag-and-drop, recurring events, and smooth interactions. Built with Next.js and Express.",
   keywords: ["calendar", "scheduling", "events", "google calendar clone"],
