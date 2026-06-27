@@ -121,7 +121,7 @@ export default function Navbar() {
       </div>
 
       {/* CENTER SECTION */}
-      <div className="flex min-w-0 flex-1 items-center justify-center gap-1 sm:gap-3">
+      <div className="flex min-w-0 flex-1 items-center justify-start sm:justify-center gap-1 sm:gap-3 ml-2 sm:ml-0">
         <button
           onClick={prevPeriod}
           className="shrink-0 rounded-full p-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"

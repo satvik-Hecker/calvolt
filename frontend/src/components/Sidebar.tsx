@@ -73,14 +73,27 @@ export default function Sidebar() {
         )}
       >
       {isSidebarOpen && (
-        <div className="h-[calc(100vh-65px)] overflow-y-auto no-scrollbar relative pt-2">
-          {/* Mobile Close Button */}
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="md:hidden absolute right-0 top-0 p-2 text-gray-500 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800"
-          >
-            <X className="w-5 h-5" />
-          </button>
+        <div className="h-full overflow-y-auto no-scrollbar flex flex-col">
+          {/* Mobile Header (Branding + Close) */}
+          <div className="md:hidden flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-800">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 flex-col overflow-hidden rounded border border-gray-300 bg-white shadow-sm dark:border-gray-600">
+                <div className="h-2 w-full bg-blue-600" />
+                <div className="flex flex-1 items-center justify-center text-sm font-bold text-gray-700 dark:text-gray-200">
+                  {format(new Date(), 'd')}
+                </div>
+              </div>
+              <span className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                CalVolt
+              </span>
+            </div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* Create Button */}
           <button
