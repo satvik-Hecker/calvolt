@@ -95,18 +95,39 @@ export default function Navbar() {
           <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
-        <div className="flex min-w-47 items-center gap-2 sm:gap-4">
+        <div className="hidden sm:flex items-center gap-2 sm:gap-4">
           {/* Calendar Icon */}
-          <div className="hidden sm:flex h-10 w-10 flex-col overflow-hidden rounded border border-gray-300 bg-white shadow-sm dark:border-gray-600">
+          <div className="flex h-10 w-10 flex-col overflow-hidden rounded border border-gray-300 bg-white shadow-sm dark:border-gray-600">
             <div className="h-2.5 w-full bg-blue-600" />
             <div className="flex flex-1 items-center justify-center text-base font-bold text-gray-700 dark:text-gray-200">
               {todayDayNumber}
             </div>
           </div>
 
-          <span className="hidden text-xl font-normal text-gray-700 sm:block dark:text-gray-200">
+          <span className="text-xl font-normal text-gray-700 dark:text-gray-200">
             CalVolt
           </span>
+        </div>
+
+        {/* Mobile Navigation Controls */}
+        <div className="flex sm:hidden items-center gap-0.5 ml-1">
+          <button
+            onClick={prevPeriod}
+            className="shrink-0 rounded-full p-1 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
+
+          <h2 className="truncate px-0.5 text-center text-[13px] font-semibold text-gray-700 dark:text-gray-200 max-w-[90px]">
+            {getHeaderText()}
+          </h2>
+
+          <button
+            onClick={nextPeriod}
+            className="shrink-0 rounded-full p-1 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <ChevronRight className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          </button>
         </div>
       </div>
 
@@ -120,8 +141,8 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* CENTER SECTION */}
-      <div className="flex min-w-0 flex-1 items-center justify-start sm:justify-center gap-1 sm:gap-3 ml-2 sm:ml-0">
+      {/* CENTER SECTION (Desktop Only) */}
+      <div className="hidden sm:flex flex-1 items-center justify-center gap-3">
         <button
           onClick={prevPeriod}
           className="shrink-0 rounded-full p-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -129,7 +150,7 @@ export default function Navbar() {
           <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
-        <h2 className="truncate px-1 text-center text-[13px] font-semibold text-gray-700 sm:min-w-[180px] sm:text-xl dark:text-gray-200">
+        <h2 className="truncate px-1 text-center font-medium text-gray-700 min-w-[180px] text-xl dark:text-gray-200">
           {getHeaderText()}
         </h2>
 
