@@ -38,7 +38,7 @@ eventSchema.pre('save', function (next) {
   if (this.startTime >= this.endTime) {
     return next(new Error('End time must be strictly after start time.'));
   }
-  next();
+  
 });
 
 const Event = mongoose.model('Event', eventSchema);
