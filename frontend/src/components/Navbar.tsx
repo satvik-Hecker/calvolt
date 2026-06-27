@@ -97,7 +97,7 @@ export default function Navbar() {
 
         <div className="flex min-w-47 items-center gap-2 sm:gap-4">
           {/* Calendar Icon */}
-          <div className="flex h-10 w-10 flex-col overflow-hidden rounded border border-gray-300 bg-white shadow-sm dark:border-gray-600">
+          <div className="hidden sm:flex h-10 w-10 flex-col overflow-hidden rounded border border-gray-300 bg-white shadow-sm dark:border-gray-600">
             <div className="h-2.5 w-full bg-blue-600" />
             <div className="flex flex-1 items-center justify-center text-base font-bold text-gray-700 dark:text-gray-200">
               {todayDayNumber}
@@ -129,7 +129,7 @@ export default function Navbar() {
           <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
 
-        <h2 className="truncate px-1 text-center text-sm font-medium text-gray-700 sm:min-w-[180px] sm:text-xl dark:text-gray-200">
+        <h2 className="truncate px-1 text-center text-[13px] font-semibold text-gray-700 sm:min-w-[180px] sm:text-xl dark:text-gray-200">
           {getHeaderText()}
         </h2>
 
@@ -158,7 +158,7 @@ export default function Navbar() {
           value={currentView || 'month'}
           onValueChange={(value) => setCurrentView(value as typeof currentView)}
         >
-          <SelectTrigger className="h-9 w-[90px] rounded-full border-gray-300 text-xs sm:w-[130px] sm:text-sm dark:border-gray-700">
+          <SelectTrigger className="h-8 w-[75px] rounded-full border-gray-300 text-[11px] font-medium sm:h-9 sm:w-[130px] sm:text-sm dark:border-gray-700">
             <SelectValue />
           </SelectTrigger>
 
@@ -184,7 +184,7 @@ export default function Navbar() {
               onClick={() => setShowUserMenu((prev) => !prev)}
               className="rounded-full transition-all hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700"
             >
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                 <AvatarImage src="" alt={user?.name || 'User'} />
                 <AvatarFallback className="bg-blue-600 text-white text-xs font-semibold">
                   {getInitials()}

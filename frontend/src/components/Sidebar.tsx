@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import {
   format,
   addMonths,
@@ -73,7 +73,15 @@ export default function Sidebar() {
         )}
       >
       {isSidebarOpen && (
-        <div className="h-[calc(100vh-65px)] overflow-y-auto no-scrollbar">
+        <div className="h-[calc(100vh-65px)] overflow-y-auto no-scrollbar relative pt-2">
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden absolute right-0 top-0 p-2 text-gray-500 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
           {/* Create Button */}
           <button
             onClick={() => {
