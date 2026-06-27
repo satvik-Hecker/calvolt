@@ -28,6 +28,17 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'success', message: 'CalVolt API is running' });
 });
 
+// Database connection middleware for Serverless
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('DB Middleware Error:', error);
+    res.status(500).json({ message: 'Database connection failed', error: error.message });
+  }
+});
+
 // Routes
 app.use('/api/events', eventRoutes);
 app.use('/api/auth', authRoutes);
@@ -40,8 +51,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect to DB immediately for serverless environment
-connectDB();
+// Initialize DB in background (optional, but good for cold starts)
+connectDB().catch(console.error);
 
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
