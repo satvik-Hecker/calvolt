@@ -40,12 +40,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-const startServer = async () => {
+// Connect to DB immediately for serverless environment
+connectDB();
+
+if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
-  await connectDB();
   app.listen(PORT, () => {
     console.log(`CalVolt API running on port ${PORT}`);
   });
-};
+}
 
-startServer();
+export default app;
