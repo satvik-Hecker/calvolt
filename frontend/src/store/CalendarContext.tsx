@@ -169,6 +169,13 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
     fetchEvents();
   }, [fetchEvents]);
 
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
   return (
     <CalendarContext.Provider
       value={{
